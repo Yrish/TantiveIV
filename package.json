@@ -4,7 +4,7 @@
   "description": "A code camp project, an application for student study",
   "main": "app.js",
   "scripts": {
-    "dev-start" : "nodemon app.js",
+    "dev-start": "nodemon app.js",
     "setup": "yarn && cd servers/file && yarn && cd ../web && yarn && cd ../.. && yarn dev",
     "dev": "concurrently --kill-others --prefix [{name}] --names api,file,web -c green,blue,yellow \"yarn dev-start\" \"cd servers/file && yarn dev-start\" \"cd servers/web && yarn dev-start\"",
     "test": "test"
@@ -15,5 +15,11 @@
     "study"
   ],
   "author": "Braysen Goodwin",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^3.5.1",
+    "express": "^4.16.3",
+    "mongoose": "^5.0.14",
+    "ws": "^5.1.1"
+  }
 }

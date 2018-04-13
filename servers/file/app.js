@@ -3,8 +3,8 @@ const config = require('./config')
 
 const app = express()
 
-app.get('files/:filename', (req, res) => {
-  res.send(`grabing file: ${req.props.filename}`)
+app.get('/files/:filename', (req, res) => {
+  res.send(`grabing file: ${req.params.filename}`)
 })
 
 app.listen(config.PORT, () => {

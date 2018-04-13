@@ -8,5 +8,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(config.PORT, (req, res) => {
-  console.log(`file server active on http://${config.DOMAIN}:${config.PORT}`)
+  console.log(`web server active on http://${config.DOMAIN}:${config.PORT}`)
 })
