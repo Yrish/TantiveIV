@@ -1,0 +1,12 @@
+{
+  "name": "tantiveivwebserver",
+  "version": "0.0.1",
+  "description": "the web server for the tantive iv code camp group",
+  "main": "app.js",
+  "scripts": {
+    "dev-start" : "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Braysen Goodwin",
+  "license": "ISC"
+}

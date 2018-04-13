@@ -1,0 +1,12 @@
+{
+  "name": "tantiveivfileserver",
+  "version": "0.0.1",
+  "description": "the file server for tantive iv code camp group",
+  "main": "app.js",
+  "scripts": {
+    "dev-start" : "nodemon app.js",
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC"
+}
