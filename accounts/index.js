@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const wsErrors = require('../services/message/error')
 const wsMessage = require('../services/message/message')
 const types = require('../services/message/types')
+const crypto = require('crypto')
 
 const login = (username, password, ws) => {
   if (username.username) {
@@ -56,7 +57,7 @@ const login = (username, password, ws) => {
       if (!ws) {
         return res
       }
-      ws.send(wsMessage.makesendable(wsMessage.make(types.LOG_IN_SUCCESSFULL, {user})))
+      ws.send(wsMessage.makesendable(wsMessage.make(types.LOG_IN_SUCCESSFULL, {res})))
     })
   })
 }
@@ -110,13 +111,17 @@ const register = (account, ws) => {
         return
       }
     }
-    let user = new mongoose.models.user(account)
-    console.log(`registered account ${account.username}`)
-    user.save()
-    if (!ws) {
-      return user
-    }
-    ws.send(wsMessage.makesendable(wsMessage.make(types.REGISTER_SEUCCESSFULL, {user})))
+    saltAndHash(account.password, (encryptedpassword) => {
+      console.log(`Encrytped Password: ${encryptedpassword}`)
+      account.password = encryptedpassword
+      let user = new mongoose.models.user(account)
+      console.log(`registered account ${account.username}`)
+      user.save()
+      if (!ws) {
+        return user
+      }
+      ws.send(wsMessage.makesendable(wsMessage.make(types.REGISTER_SEUCCESSFULL, {user})))
+    })
   })
 }
 
@@ -124,6 +129,25 @@ let validatePassword = (plainPass, hashedPass, callback) => {
 	var salt = hashedPass.substr(0, 10);
 	var validHash = salt + md5(plainPass + salt);
 	callback(null, hashedPass === validHash);
+}
+
+let saltAndHash = (pass, callback) => {
+	var salt = generateSalt();
+	callback(salt + md5(pass + salt));
+}
+
+let generateSalt = () => {
+	var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';
+	var salt = '';
+	for (var i = 0; i < 10; i++) {
+		var p = Math.floor(Math.random() * set.length);
+		salt += set[p];
+	}
+	return salt;
+}
+
+let md5 = (str) => {
+	return crypto.createHash('md5').update(str).digest('hex');
 }
 
 module.exports = {register, login}

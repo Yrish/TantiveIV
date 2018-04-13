@@ -11,8 +11,8 @@ mongoose.connect('mongodb://study.test/study')
 const models = require('./models')
 
 //test code
-const User = new mongoose.models.user({email: "test@test.com", username: "me", password:"passingwords!"})
-User.save((err) => {if (err) {console.log(err)}})
+// const User = new mongoose.models.user({email: "test@test.com", username: "me", password:"passingwords!"})
+// User.save((err) => {if (err) {console.log(err)}})
 
 
 enableWs(app)
