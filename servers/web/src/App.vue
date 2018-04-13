@@ -31,11 +31,11 @@ export default {
   created() {
     try {
       var webSocket = new WebSocket("ws://study.test:8001/ws");
-      webSocket.onopen = (event) => {
-        webSocket.onmessage = (event) => {console.log(event)};
-        webSocket.send(JSON.stringify({type: "LOGIN", payload: {username: "MEEE", password: "BLUESCLUES", email: "test@test.com"}}))
+      webSocket.onopen = (event) => {webSocket.onmessage = (event) => {console.log(event)}
+        webSocket.send(JSON.stringify({type:"REGISTER", payload:{username:"test", password:"test", email:"test@test.com"}}))
+        webSocket.send(JSON.stringify({type:"LOGIN", payload:{username:"test", password:"test"}}))
       };
-    } catch (err){
+    } catch (err) {
       console.log("Could not connect to server.");
       console.log(err);
     }
@@ -50,6 +50,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

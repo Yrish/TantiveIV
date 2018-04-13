@@ -5,7 +5,10 @@ const notebook = new schema({
   createdBy: {type: String, default: ""},
   readPermission: {type: Array, default: []},
   writePermission: {type: Array, default: []},
-  modules: {type: Array, default: []}
+  modules: [{
+    name: String,
+    contents: Object,
+  }],
 })
 
 let model = mongoose.model('nootebook', )

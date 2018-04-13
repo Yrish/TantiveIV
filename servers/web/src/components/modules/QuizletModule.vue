@@ -1,18 +1,17 @@
 <template>
   <div class="module card-body">
     <div v-if="editing">
-      <textarea class="text-content" id="textModule" v-model.sync="editedContent.text"></textarea>
+      <textarea class="text-content" id="textModule" v-model.sync="editedContent.quizUrl"></textarea>
     </div>
     <div v-else>
-
-      <p class="text-content" v-text="content.text"></p>
+      <iframe :src="content.quizUrl" height="500" width="100%" style="border:0"></iframe>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: "TextModule",
+    name: "QuizletModule",
     props: {
       content: {
         type: Object,

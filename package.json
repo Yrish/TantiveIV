@@ -6,7 +6,7 @@
   "scripts": {
     "dev-start": "nodemon app.js",
     "setup": "yarn && cd servers/file && yarn && cd ../web && yarn && cd ../.. && yarn dev",
-    "dev": "concurrently --kill-others --prefix [{name}] --names api,file,web,mongo -c green,blue,yellow,cyan \"yarn dev-start\" \"cd servers/file && yarn dev-start\" \"cd servers/web\" \"mongod --dbpath ./dbs\"",
+    "dev": "concurrently --kill-others --prefix [{name}] --names api,file,mongo -c green,blue,cyan \"yarn dev-start\" \"cd servers/file && yarn dev-start\" \"mongod --dbpath ./dbs\"",
     "test": "test"
   },
   "keywords": [

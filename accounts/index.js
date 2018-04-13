@@ -4,7 +4,7 @@ const wsMessage = require('../services/message/message')
 const types = require('../services/message/types')
 const crypto = require('crypto')
 
-const login = (username, password, ws) => {
+const login = (username, password, req, ws) => {
   if (username.username) {
     username = username.username
     password = username.password
@@ -62,7 +62,8 @@ const login = (username, password, ws) => {
   })
 }
 
-const register = (account, ws) => {
+const register = (account, req, ws) => {
+  console.log(Object.keys(req))
   let problem
 
   if (!account.username) {

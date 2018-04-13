@@ -1,0 +1,14 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.navbar {
+	padding: 0rem 1rem 0.5rem 1rem;
+}
+
+body {
+	background: blue;
+}

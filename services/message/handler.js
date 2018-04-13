@@ -3,7 +3,7 @@ const error = require('./error')
 const types = require('./types')
 const messageRouter = require('./router')
 
-let HandleMessage = (mess, ws) => {
+let HandleMessage = (mess, req, ws) => {
   try {
     mess = JSON.parse(mess)
   } catch(err) {
@@ -15,7 +15,7 @@ let HandleMessage = (mess, ws) => {
     ws.send(message.makesendable(error.make('MISSING_TYPE', `'type' attribute of message was missing`, mess)))
     return
   }
-  let result = messageRouter.route(mess, ws)
+  let result = messageRouter.route(mess, req, ws)
   if(!result) {
     return
   }

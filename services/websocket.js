@@ -28,8 +28,8 @@ const setupWebSockets = (app) => {
 function setUpWebSocket(ws, req) {
   console.log("reached")
   console.log('[websocket] opening')
-  ws.on('message', (message) => {
-    messageHandler.handle(message, ws)
+  ws.on('message', (message, req) => {
+    messageHandler.handle(message, req, ws)
   })
 
   ws.on('error', (err) => {
