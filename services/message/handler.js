@@ -26,4 +26,4 @@ let HandleMessage = (mess, ws) => {
   ws.send(message.makesendable(result))
 }
 
-module.exports = HandleMessage
+module.exports = {handle: HandleMessage}

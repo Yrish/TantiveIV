@@ -3,7 +3,8 @@ const error = require('./error')
 
 let router = {
   [types.ERROR]: (message) => console.log(`[message] INCOMING ERROR: ${error.type}: ${error.reason}: ${error.data}`),
-  [types.GET_USER]: (message) => console.log('[message] GRABING USER')
+  [types.GET_USER]: (message) => console.log('[message] GRABING USER'),
+  [types.PRINT]: (message) => console.log(`[message] print message PRINT: ${message.payload}`)
 }
 
 let route = (message) => {
