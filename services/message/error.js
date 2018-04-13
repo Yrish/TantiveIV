@@ -5,4 +5,8 @@ let make = (errortype, reason = "unknown", data = 'None') => {
   return message.make(types.ERROR, {type: errortype, reason, data})
 }
 
-module.exports = {make}
+let makeAccountError = (errortype, reason = "unknown", data = 'None') => {
+  return message.make(types.ACCOUNT_ERROR, {type: errortype, reason, data})
+}
+
+module.exports = {make, makeAccountError}

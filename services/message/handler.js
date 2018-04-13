@@ -15,7 +15,7 @@ let HandleMessage = (mess, ws) => {
     ws.send(message.makesendable(error.make('MISSING_TYPE', `'type' attribute of message was missing`, mess)))
     return
   }
-  let result = messageRouter.route(mess)
+  let result = messageRouter.route(mess, ws)
   if(!result) {
     return
   }

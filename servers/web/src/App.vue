@@ -31,7 +31,10 @@ export default {
   created() {
     try {
       var webSocket = new WebSocket("ws://study.test:8001/ws");
-      webSocket.onopen = (event) => {console.log("Web Socket Open")};
+      webSocket.onopen = (event) => {
+        webSocket.onmessage = (event) => {console.log(event)};
+        webSocket.send(JSON.stringify({type: "REGISTER", payload: {username: "MEEEE", password: "BLUESCLUES", email: "test@test.com"}}))
+      };
     } catch (err){
       console.log("Could not connect to server.");
       console.log(err);
