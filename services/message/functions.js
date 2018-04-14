@@ -64,7 +64,7 @@ function getNotebooks (message, ws) {
     }
     userID = ws.user._id
   }
-  mongoose.models.user.findOne({id: userID}, (err, account) => {
+  mongoose.models.user.findOne({_id: userID}, (err, account) => {
     if(err) {
       ws.send(MessageCreator.makesendable(error.make("SERVER_ERROR", "A problem happened in the server", err)))
       return
