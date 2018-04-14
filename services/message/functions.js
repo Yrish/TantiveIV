@@ -197,6 +197,8 @@ function deleteNotebook (message, ws) {
     }
     ws.user.notebooks.splice(ws.user.notebooks.indexOf(message.payload._id), 1)
     ws.user.save()
+
+    //permissions
     mongoose.models.notebook.remove({_id:message.payload._id}, (err)=>{
       console.log("unable to delete")
     })
