@@ -72,6 +72,7 @@ const login = (username, password, req, ws) => {
 }
 
 const logout = (ws) => {
+  console.log("logging out")
   if(ws.session) {
     if (ws.session.userID) {
       delete ws.session.userID
@@ -81,8 +82,8 @@ const logout = (ws) => {
   if (ws.user) {
     delete ws.user
   }
-  ws.send(wsMessage.makesendable(ws.make(types.SIGN_OUT_SUCCESSFULL, null)))
-  ws.send(wsMessage.makesendable(ws.make(types.SET_NOTEBOOKS, {notebooks: []})))
+  ws.send(wsMessage.makesendable(wsMessage.make(types.SIGN_OUT_SUCCESSFULL, null)))
+  ws.send(wsMessage.makesendable(wsMessage.make(types.SET_NOTEBOOKS, {notebooks: []})))
 }
 
 const register = (account, req, ws) => {
