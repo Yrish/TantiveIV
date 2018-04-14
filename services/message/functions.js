@@ -98,7 +98,7 @@ function setNotebook(message, ws) {
   }
   mongoose.models.notebook.findOne({_id: notebookID}, (err, notebook) => {
     if (err) {
-      ws.send(MessageCreator.makesendable(error.make("SERVER_ERROR", "A problem happened in the server", err)))
+      ws.send(MessageCreator.makesendable(error.make("SERVER_ERROR", `A problem happened in the server`, err)))
       return
     }
     if (!ws.user) {
@@ -124,7 +124,7 @@ function createNotebook(message, ws) {
   if (!title) {
     title = "No title"
   }
-  let notebook = new mongoose.models.notebook({readPermission: [ws.user._id], metadata: {createdBy: ws.user._id, title}})
+  let notebook = new mongoose.models.notebook({writePermission: [ws.user._id], metadata: {createdBy: ws.user._id, title}})
   ws.user.notebooks.push(notebook._id)
   notebook.save()
   ws.user.save()

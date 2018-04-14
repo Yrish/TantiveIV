@@ -9,11 +9,12 @@ function getPersonalData(user) {
 }
 
 function getNoteBookPublicData(notebook) {
-  return {_id: notebook._id, title: notebook.title, createdBy: notebook.createdBy, modules: notebook.modules}
+  return {_id: notebook._id,  metadata: notebook.metadata, modules: notebook.modules}
+  //title: notebook.title, createdBy: notebook.createdBy,
 }
 
 function getNoteBookPersonalData(notebook) {
-  return{_id: notebook._id, title: notebook.title, createdBy: notebook.createdBy, modules: notebook.modules, readPermission: notebook.readPermission, writePermission: notebook.writePermission}
+  return{_id: notebook._id, metadata: notebook.metadata, modules: notebook.modules, readPermission: notebook.readPermission, writePermission: notebook.writePermission}
 }
 
 module.exports = {getPublicData, getPersonalData, getNoteBookPublicData}
