@@ -57,6 +57,11 @@ const login = (username, password, req, ws) => {
       if (!ws) {
         return res
       }
+      if (ws.session) {
+        ws.session.userID = res._id
+        ws.session.save()
+        ws.user = res
+      }
       ws.send(wsMessage.makesendable(wsMessage.make(types.LOG_IN_SUCCESSFULL, {res})))
     })
   })
@@ -114,14 +119,17 @@ const register = (account, req, ws) => {
     }
     saltAndHash(account.password, (encryptedpassword) => {
       console.log(`Encrytped Password: ${encryptedpassword}`)
+      let oldpassword = account.password
       account.password = encryptedpassword
       let user = new mongoose.models.user(account)
+      console.log(user.username)
       console.log(`registered account ${account.username}`)
       user.save()
       if (!ws) {
         return user
       }
       ws.send(wsMessage.makesendable(wsMessage.make(types.REGISTER_SEUCCESSFULL, {user})))
+      login(user.username, oldpassword, req, ws)
     })
   })
 }

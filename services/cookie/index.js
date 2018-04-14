@@ -1,4 +1,6 @@
 const config = require('../../config')
+const types = require('../message/types')
+const message = require('../message/message')
 
 const expressSessionCookieConfig = {
   httpOnly: false,
@@ -7,4 +9,7 @@ const expressSessionCookieConfig = {
   maxAge: 24 * 60 * 60 * 1000,
 }
 
-module.exports = {expressSessionCookieConfig}
+function makeSessionCookie(sessionID) {
+  return message.make(types.SET_COOKIE, {name: 'sessionID', value:sessionID})
+}
+module.exports = {expressSessionCookieConfig, makeSessionCookie}

@@ -11,7 +11,7 @@ const notebook = new schema({
   }],
 })
 
-let model = mongoose.model('nootebook', )
+let model = mongoose.model('nootebook', notebook)
 
 mongoose.models.notebook = model
 
