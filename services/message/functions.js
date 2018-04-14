@@ -41,6 +41,8 @@ function setSession(message, ws) {
             return
           }
           ws.user = acc
+          let user = modelUtils.getPersonalData(acc)
+          ws.send(MessageCreator.makesendable(MessageCreator.make(types.LOG_IN_SUCCESSFULL,{user})))
         })
       }
       return
