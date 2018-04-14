@@ -3,6 +3,7 @@ const types = require('./types')
 const cookie = require('../cookie')
 const mongoose = require('mongoose')
 const error = require('./error')
+const modelUtils = require('../../models/utils')
 
 function getSession(ws) {
   if (ws.sessionID && ws.session) {
@@ -32,7 +33,7 @@ function setSession(message, ws) {
       ws.sessionID = session._id
       console.log(`[socket] set session to ${session._id}`)
       if (session.userID) {
-        mongoose.modles.user.findOne({_id: session.userID}, (err, acc) => {
+        mongoose.models.user.findOne({_id: session.userID}, (err, acc) => {
           if (err) {
             return
           }
@@ -49,4 +50,62 @@ function setSession(message, ws) {
   })
 }
 
-module.exports = {getSession, setSession}
+function getNotebooks (message, ws) {
+  let userID
+  if (message.payload) {
+    userID = message.payload.userID
+  }
+  if (!userID) {
+    if (!ws.user) {
+      ws.send(MessageCreator.makesendable(error.make("USER_ERROR", "no user (userID) given and not logged in, must supply at least one for 'getNotebooks' to work", message)))
+      return
+    }
+    userID = ws.user._id
+  }
+  mongoose.models.user.findOne({id: userID}, (err, account) => {
+    if(err) {
+      ws.send(MessageCreator.makesendable(error.make("SERVER_ERROR", "A problem happened in the server", err)))
+      return
+    }
+    if(!account) {
+      ws.send(MessageCreator.makesendable(error.make("USER_ERROR", `no user was found with id '${userID}'`)))
+      return
+    }
+    let notebooks = account.notebooks
+    mongoose.models.notebook.find({'_id': { $in: notebooks}}, (err, notebooks) => {
+      if (err) {
+        ws.send(MessageCreator.makesendable(error.make("SERVER_ERROR", "A problem happened in the server", err)))
+        return
+      }
+      let sendableNotebooks = []
+      for (let notebook of notebooks) {
+        sendableNotebooks.push(modelUtils.getNoteBookPublicData(notebook))
+      }
+      ws.send(MessageCreator.makesendable(MessageCreator.make(types.SET_NOTEBOOKS, {notebooks: sendableNotebooks})))
+    })
+  })
+}
+
+function setNotebook(message, ws) {
+  if (!message.payload || !message.payload.notebook) {
+    ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", "payload.notebook must exist in message 'SET_NOTEBOOK'", message)))
+  }
+  let notebookID = message.payload.notebook._id
+  if (!notebookID) {
+    ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", "payload.notebook is missing attribute _id")))
+  }
+  mongoose.models.notebook.findOne({_id: notebookID}, (err, notebook) => {
+    if (err) {
+      ws.send(MessageCreator.makesendable(error.make("SERVER_ERROR", "A problem happened in the server", err)))
+      return
+    }
+    if (!ws.user) {
+      ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", `can not edit notebook when not signed in`)))
+    }
+    if (!notebook) {
+      ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", `no notebook exists with id: '${notebookID}'`)))
+    }
+  })
+}
+
+module.exports = {getSession, setSession, getNotebooks, setNotebook}

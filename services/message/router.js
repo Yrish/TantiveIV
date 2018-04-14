@@ -11,6 +11,8 @@ let router = {
   [types.REGISTER] : (message, req, ws) => accountManager.register(message.payload, req, ws),
   [types.GET_SESSION]: (message, req, ws) => functions.getSession(ws),
   [types.SET_SESSION]: (message, req, ws) => functions.setSession(message, ws),
+  [types.GET_NOTEBOOKS]: (message, req, ws) => functions.getNotebooks(message, ws),
+  [types.SET_NOTEBOOK]: (message, req, ws) => functions.setNotebook(message, ws),
 }
 
 let route = (message, req, ws) => {

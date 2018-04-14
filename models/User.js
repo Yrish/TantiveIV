@@ -4,7 +4,7 @@ const user = new schema({
   email: String,
   username: String,
   password: String,
-  notebook: {type: Array, default: []},
+  notebooks: {type: Array, default: []},
   creationTime: {type: Date, default: Date.now}
 })
 

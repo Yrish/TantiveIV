@@ -53,16 +53,16 @@ const login = (username, password, req, ws) => {
           return
         }
       }
-      console.log(`signed in as ${res.username}`)
+      console.log(`signed in as ${account.username}`)
       if (!ws) {
-        return res
+        return account
       }
       if (ws.session) {
-        ws.session.userID = res._id
+        ws.session.userID = account._id
         ws.session.save()
-        ws.user = res
+        ws.user = account
       }
-      ws.send(wsMessage.makesendable(wsMessage.make(types.LOG_IN_SUCCESSFULL, {res})))
+      ws.send(wsMessage.makesendable(wsMessage.make(types.LOG_IN_SUCCESSFULL, {user: account})))
     })
   })
 }
