@@ -197,17 +197,17 @@ function deleteNotebook (message, ws) {
     }
     ws.user.notebooks.remove(ws.user.notebooks.indexOf(message.payload._id))
     ws.user.save()
-    notb.readPermission.remove(notb.readPermission.indexOf(message.payload._id))
-    notb.writePermission.remove(notb.writePermission.indexOf(message.payload._id))
-    if (notb.writePermission.length == 0) {
-      if (notb.readPermission.length == 0) {
-        notb.remove().exec()
+    noteb.readPermission.remove(noteb.readPermission.indexOf(message.payload._id))
+    noteb.writePermission.remove(noteb.writePermission.indexOf(message.payload._id))
+    if (noteb.writePermission.length == 0) {
+      if (noteb.readPermission.length == 0) {
+        noteb.remove().exec()
         return
       }
-      notb.writePermission.push(notb.readPermission[0])
-      notb.readPermission.remove(0)
+      noteb.writePermission.push(noteb.readPermission[0])
+      noteb.readPermission.remove(0)
     }
-    notb.save()
+    noteb.save()
   })
 }
 
