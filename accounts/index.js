@@ -3,6 +3,7 @@ const wsErrors = require('../services/message/error')
 const wsMessage = require('../services/message/message')
 const types = require('../services/message/types')
 const crypto = require('crypto')
+const modelUtils = require('../models/utils')
 
 const login = (username, password, req, ws) => {
   if (username.username) {
@@ -62,7 +63,8 @@ const login = (username, password, req, ws) => {
         ws.session.save()
         ws.user = account
       }
-      ws.send(wsMessage.makesendable(wsMessage.make(types.LOG_IN_SUCCESSFULL, {user: account})))
+      let user = modelUtils.getPersonalData(account)
+      ws.send(wsMessage.makesendable(wsMessage.make(types.LOG_IN_SUCCESSFULL, {user})))
     })
   })
 }
