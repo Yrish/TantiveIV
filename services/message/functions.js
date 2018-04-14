@@ -107,6 +107,8 @@ function setNotebook(message, ws) {
     if (!notebook) {
       ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", `no notebook exists with id: '${notebookID}'`)))
     }
+    let finishedNotebook = Object.assign(message.payload.notebook, notebook)
+    finishedNotebook.save()
   })
 }
 
@@ -126,7 +128,7 @@ function createNotebook(message, ws) {
   ws.user.notebooks.append(notebook._id)
   notebook.save()
   ws.user.save()
-  ws.send(MessageCreator.makesendable(MessageCreator.make(types.NOTEBOOK_CREATION_SUCCESS, {notebook})))
+  ws.send(MessageCreator.makesendable(MessageCreator.make(types.NOTEBOOK_CREATION_SUCCESS, {notebook: modelUtils.getNoteBookPublicData(notebook)})))
 }
 
 module.exports = {getSession, setSession, getNotebooks, setNotebook, createNotebook}
