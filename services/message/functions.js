@@ -195,10 +195,14 @@ function deleteNotebook (message, ws) {
     if (!ws.user) {
       ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", `you must sign in to delete a notebook`, null)))
     }
-    ws.user.notebooks.remove(ws.user.notebooks.indexOf(message.payload._id))
+    ws.user.notebooks.splice(ws.user.notebooks.indexOf(message.payload._id), 1)
     ws.user.save()
-    noteb.readPermission.remove(noteb.readPermission.indexOf(message.payload._id))
-    noteb.writePermission.remove(noteb.writePermission.indexOf(message.payload._id))
+    mongoose.models.notebook.remove({_id:message.payload._id}, (err)=>{
+      console.log("unable to delete")
+    })
+    return
+    noteb.readPermission.splice(noteb.readPermission.indexOf(message.payload._id), 1)
+    noteb.writePermission.splice(noteb.writePermission.indexOf(message.payload._id), 1)
     if (noteb.writePermission.length == 0) {
       if (noteb.readPermission.length == 0) {
         noteb.remove().exec()
