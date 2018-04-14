@@ -107,8 +107,14 @@ function setNotebook(message, ws) {
     if (!notebook) {
       ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", `no notebook exists with id: '${notebookID}'`)))
     }
-    let finishedNotebook = Object.assign(notebook, message.payload.notebook)
-    finishedNotebook.save()
+    console.log(`#######################################################################`)
+    console.log(message.payload.notebook)
+    let netbook = message.payload.notebook
+    notebook.title = netbook.title
+    notebook.metadata = netbook.metadata
+    notebook.modules = netbook.modules
+    console.log(notebook)
+    notebook.save()
   })
 }
 
@@ -172,4 +178,37 @@ function getNotebook(message, ws) {
   })
 }
 
-module.exports = {getSession, setSession, getNotebooks, setNotebook, createNotebook, getNotebook}
+function deleteNotebook (message, ws) {
+  if (!message.payload) {
+    ws.send(MessageCreator.makesendable(error.make("BAD_PAYLOAD", "Message must have payload._id for message type 'DELETE_NOTEBOOK' (payload is missing)", null)))
+  }
+  if(!message.payload._id) {
+    ws.send(MessageCreator.makesendable(error.make("BAD_PAYLOAD", "Message must have payload._id for message type 'DELETE_NOTEBOOK' (_id is missing)", null)))
+  }
+  mongoose.models.notebook.findOne({_id: message.payload._id}, (err, noteb) => {
+    if (err) {
+      ws.send(MessageCreator.makesendable(error.make("DB_ERROR", "A problem happened in the database", err)))
+    }
+    if (!noteb) {
+      ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", `no notebook with _id:'${message.payload._id} exists'`, null)))
+    }
+    if (!ws.user) {
+      ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", `you must sign in to delete a notebook`, null)))
+    }
+    ws.user.notebooks.remove(ws.user.notebooks.indexOf(message.payload._id))
+    ws.user.save()
+    notb.readPermission.remove(notb.readPermission.indexOf(message.payload._id))
+    notb.writePermission.remove(notb.writePermission.indexOf(message.payload._id))
+    if (notb.writePermission.length == 0) {
+      if (notb.readPermission.length == 0) {
+        notb.remove().exec()
+        return
+      }
+      notb.writePermission.push(notb.readPermission[0])
+      notb.readPermission.remove(0)
+    }
+    notb.save()
+  })
+}
+
+module.exports = {getSession, setSession, getNotebooks, setNotebook, createNotebook, getNotebook, deleteNotebook}

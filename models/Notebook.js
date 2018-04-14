@@ -8,10 +8,7 @@ const notebook = new schema({
   }},
   readPermission: {type: Array, default: []},
   writePermission: {type: Array, default: []},
-  modules: {type: [{
-    name: String,
-    contents: Object,
-  }], default: []}
+  modules: [],
 })
 
 let model = mongoose.model('nootebook', notebook)

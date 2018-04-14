@@ -4,6 +4,7 @@ const wsMessage = require('../services/message/message')
 const types = require('../services/message/types')
 const crypto = require('crypto')
 const modelUtils = require('../models/utils')
+const messageFunctions = require('../services/message/functions')
 
 const login = (username, password, req, ws) => {
   if (username.username) {
@@ -65,6 +66,7 @@ const login = (username, password, req, ws) => {
       }
       let user = modelUtils.getPersonalData(account)
       ws.send(wsMessage.makesendable(wsMessage.make(types.LOG_IN_SUCCESSFULL, {user})))
+      messageFunctions.getNotebooks({}, ws)
     })
   })
 }
@@ -80,6 +82,7 @@ const logout = (ws) => {
     delete ws.user
   }
   ws.send(wsMessage.makesendable(ws.make(types.SIGN_OUT_SUCCESSFULL, null)))
+  ws.send(wsMessage.makesendable(ws.make(types.SET_NOTEBOOKS, {notebooks: []})))
 }
 
 const register = (account, req, ws) => {
@@ -142,6 +145,11 @@ const register = (account, req, ws) => {
       user.save()
       if (!ws) {
         return user
+      }
+      ws.user = user
+      if (ws.session) {
+        ws.session.userID = user._id
+        ws.session.save()
       }
       ws.send(wsMessage.makesendable(wsMessage.make(types.REGISTER_SEUCCESSFULL, {user})))
       login(user.username, oldpassword, req, ws)

@@ -16,6 +16,7 @@ let router = {
   [types.LOGOUT]: (message, req, ws) => accountManager.logout(ws),
   [types.CREATE_NOTEBOOK]: (message, req, ws) => functions.createNotebook(message, ws),
   [types.GET_NOTEBOOK]: (message, rew, ws) => functions.getNotebook(message, ws),
+  [types.DELETE_NOTEBOOK]: (message, req, ws) => functions.deleteNotebook(message, ws),
 }
 
 let route = (message, req, ws) => {
