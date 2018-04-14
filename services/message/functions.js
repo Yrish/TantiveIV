@@ -107,7 +107,7 @@ function setNotebook(message, ws) {
     if (!notebook) {
       ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", `no notebook exists with id: '${notebookID}'`)))
     }
-    let finishedNotebook = Object.assign(message.payload.notebook, notebook)
+    let finishedNotebook = Object.assign(notebook, message.payload.notebook)
     finishedNotebook.save()
   })
 }
