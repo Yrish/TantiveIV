@@ -124,11 +124,52 @@ function createNotebook(message, ws) {
   if (!title) {
     title = "No title"
   }
-  let notebook = new mongoose.models.notebook({readPermission: [ws.user._id], createdBy: ws.user._id, title})
+  let notebook = new mongoose.models.notebook({readPermission: [ws.user._id], metadata: {createdBy: ws.user._id, title}})
   ws.user.notebooks.append(notebook._id)
   notebook.save()
   ws.user.save()
   ws.send(MessageCreator.makesendable(MessageCreator.make(types.NOTEBOOK_CREATION_SUCCESS, {notebook: modelUtils.getNoteBookPublicData(notebook)})))
 }
 
-module.exports = {getSession, setSession, getNotebooks, setNotebook, createNotebook}
+function getNotebook(message, ws) {
+  if(!message.payload) {
+    ws.send(MessageCreator.makesendable(error.make("BAD_REQUEST", "message must contain payload.id for message type 'GET_NOTEBOOK' (payload is missing)", message)))
+    return
+  }
+  if (!message.payload.id) {
+    ws.send(MessageCreator.makesendable(error.make("BAD_REQUEST", "message must contain payload.id for message type 'GET_NOTEBOOK' (id is missing)", message)))
+    return
+  }
+  mongoose.models.notebook.findOne({_id: message.payload.id}, (err, noteb) => {
+    if (err) {
+      ws.send(MessageCreator.makesendable(error.make("SERVER_ERROR", "A problem happened in the server", err)))
+      return
+    }
+    if (!noteb) {
+      ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", `no notebook matching ${message.payload.id} exists in database`, null)))
+      return
+    }
+    if (!ws.user) {
+      ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", "You must be signed in to view a notebook", null)))
+      return
+    }
+    let canwrite = noteb.writePermission.indexOf(ws.user._id) < 0
+    let canread = noteb.readPermission.indexOf < 0
+    if ( !canwrite && !canread ) {
+      ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", "You do not have permission to read or write in this notebook", null)))
+      return
+    }
+    if (canread && !canwrite) {
+      let notebook = modelUtils.getNoteBookPublicData(noteb)
+      ws.send(MessageCreator.makesendable(MessageCreator.make("SET_NOTEBOOK", {notebook})))
+      return
+    }
+    if (canwrite) {
+      let notebook = modelUtils.getNoteBookPersonalData(noteb)
+      ws.send(MessageCreator.makesendable(MessageCreator.make("SET_NOTEBOOK", {notebook})))
+      return
+    }
+  })
+}
+
+module.exports = {getSession, setSession, getNotebooks, setNotebook, createNotebook, getNotebook}

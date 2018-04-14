@@ -1,8 +1,7 @@
 let mongoose = require('mongoose'), schema = mongoose.Schema
 
 const notebook = new schema({
-  title: {type: String, default: "Untitled"},
-  createdBy: {type: String, default: ""},
+  metadata: {createdBy: {type: String, default: ""}, title: {type: String, default: "Untitled"}},
   readPermission: {type: Array, default: []},
   writePermission: {type: Array, default: []},
   modules: [{
