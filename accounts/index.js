@@ -67,6 +67,19 @@ const login = (username, password, req, ws) => {
   })
 }
 
+const logout = (ws) => {
+  if(ws.session) {
+    if (ws.session.userID) {
+      delete ws.session.userID
+      ws.session.save()
+    }
+  }
+  if (ws.user) {
+    delete ws.user
+  }
+  ws.send(wsMessage.makesendable(ws.make(types.SIGN_OUT_SUCCESSFULL, null)))
+}
+
 const register = (account, req, ws) => {
   console.log(Object.keys(req))
   let problem
@@ -159,4 +172,4 @@ let md5 = (str) => {
 	return crypto.createHash('md5').update(str).digest('hex');
 }
 
-module.exports = {register, login}
+module.exports = {register, login, logout}

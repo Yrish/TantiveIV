@@ -13,6 +13,7 @@ let router = {
   [types.SET_SESSION]: (message, req, ws) => functions.setSession(message, ws),
   [types.GET_NOTEBOOKS]: (message, req, ws) => functions.getNotebooks(message, ws),
   [types.SET_NOTEBOOK]: (message, req, ws) => functions.setNotebook(message, ws),
+  [types.LOGOUT]: (message, req, ws) => accountManager.logout(ws),
 }
 
 let route = (message, req, ws) => {
