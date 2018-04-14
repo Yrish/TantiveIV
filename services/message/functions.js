@@ -125,7 +125,7 @@ function createNotebook(message, ws) {
     title = "No title"
   }
   let notebook = new mongoose.models.notebook({readPermission: [ws.user._id], metadata: {createdBy: ws.user._id, title}})
-  ws.user.notebooks.append(notebook._id)
+  ws.user.notebooks.push(notebook._id)
   notebook.save()
   ws.user.save()
   ws.send(MessageCreator.makesendable(MessageCreator.make(types.NOTEBOOK_CREATION_SUCCESS, {notebook: modelUtils.getNoteBookPublicData(notebook)})))
