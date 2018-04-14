@@ -110,4 +110,23 @@ function setNotebook(message, ws) {
   })
 }
 
-module.exports = {getSession, setSession, getNotebooks, setNotebook}
+function createNotebook(message, ws) {
+  if (!ws.user) {
+    ws.send(MessageCreator.makesendable(error.make("NOTEBOOK_ERROR", "must be signed in to create notebook")))
+    return
+  }
+  let title
+  if (ws.message) {
+    title = message.title
+  }
+  if (!title) {
+    title = "No title"
+  }
+  let notebook = new mongoose.models.notebook({readPermission: [ws.user._id], createdBy: ws.user._id, title})
+  ws.user.notebooks.append(notebook._id)
+  notebook.save()
+  ws.user.save()
+  ws.send(MessageCreator.makesendable(MessageCreator.make(types.NOTEBOOK_CREATION_SUCCESS, {notebook})))
+}
+
+module.exports = {getSession, setSession, getNotebooks, setNotebook, createNotebook}

@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
 
 function getPublicData(user) {
-  return {username: user.username, notebooks: user.notebooks}
+  return {username: user.username, notebooks: user.notebooks, _id:user._id}
 }
 
 function getPersonalData(user) {
-  return {username: user.username, notebooks: ueser.notebooks, email:user.email}
+  return {username: user.username, notebooks: user.notebooks, email:user.email, _id:user._id}
 }
 
 function getNoteBookPublicData(notebook) {
